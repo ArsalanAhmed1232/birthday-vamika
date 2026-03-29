@@ -3,141 +3,204 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday Vamika 🎂</title>
+<title>For Vamika ❤️</title>
+
 <style>
-  body {
-    margin: 0;
-    overflow: hidden;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #ffd6e0, #ffe9c9);
-  }
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ffd6e0, #ffe9c9);
+}
 
-  #panda {
-    position: absolute;
-    bottom: 20px;
-    left: -150px;
-    width: 120px;
-    transition: left 2s ease, bottom 0.5s ease;
-  }
+/* PANDA */
+#panda {
+  position: absolute;
+  bottom: 20px;
+  left: -150px;
+  width: 130px;
+  transition: all 0.4s ease;
+}
 
-  #rope {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 8px;
-    height: 220px;
-    background: #333;
-    cursor: grab;
-  }
+/* ROPE */
+#rope {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 6px;
+  height: 220px;
+  background: #333;
+  cursor: grab;
+}
 
-  #banner {
-    position: absolute;
-    top: -200px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #ff4d6d;
-    color: white;
-    padding: 20px 40px;
-    font-size: 2em;
-    border-radius: 12px;
-    text-align: center;
-    transition: top 1s ease;
-  }
+/* HELP TEXT */
+#help {
+  position: absolute;
+  top: 230px;
+  width: 100%;
+  text-align: center;
+  font-size: 1.4em;
+  color: #ff4d6d;
+  display: none;
+  font-weight: bold;
+}
 
-  #message {
-    position: absolute;
-    top: 200px;
-    width: 100%;
-    text-align: center;
-    font-size: 1.3em;
-    color: #444;
-    opacity: 0;
-    transition: opacity 2s ease;
-    padding: 0 20px;
-  }
+/* BANNER */
+#banner {
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff4d6d;
+  color: white;
+  padding: 20px 40px;
+  font-size: 2em;
+  border-radius: 12px;
+  transition: top 1s ease;
+}
 
-  .confetti {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    top: 0;
-    animation: fall 3s linear infinite;
-  }
+/* MESSAGE BOX */
+#message {
+  position: absolute;
+  top: 200px;
+  width: 100%;
+  text-align: center;
+  font-size: 1.3em;
+  color: #444;
+  padding: 0 20px;
+}
 
-  @keyframes fall {
-    to {
-      transform: translateY(100vh) rotate(360deg);
-    }
+/* TYPING EFFECT */
+.typing {
+  border-right: 3px solid #ff4d6d;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+/* CONFETTI */
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 0;
+  animation: fall 3s linear infinite;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
   }
+}
 </style>
 </head>
+
 <body>
 
-<!-- YouTube Music -->
-<iframe id="musicFrame" width="0" height="0" src="https://www.youtube.com/embed/90XjRjZkT0k?enablejsapi=1" frameborder="0"></iframe>
+<audio id="music" src="https://www.fesliyanstudios.com/play-mp3/387"></audio>
 
-<img id="panda" src="https://cdn-icons-png.flaticon.com/512/616/616408.png">
+<img id="panda" src="https://cdn-icons-png.flaticon.com/512/3069/3069172.png">
+
 <div id="rope"></div>
+
+<div id="help">🐼 HELP! pull this rope down 🪢</div>
 
 <div id="banner">🎉 Happy Birthday Vamika 🎉</div>
 
 <div id="message">
-  ✨ Dear Vamika ✨ <br><br>
-  Aaj ka din sirf tumhara hai 💖<br>
-  Tumhari smile duniya ko aur beautiful banati hai 🌸<br>
-  Har khushi tumhe mile, har sapna pura ho ✨<br><br>
-  You are truly special and deserve all the love in the world ❤️<br>
-  Stay खुश, stay amazing हमेशा 💫<br><br>
-  💌 Happy Birthday once again 💌
+  <span id="text" class="typing"></span>
 </div>
 
 <script>
-  const panda = document.getElementById('panda');
-  const rope = document.getElementById('rope');
-  const banner = document.getElementById('banner');
-  const message = document.getElementById('message');
-  const frame = document.getElementById('musicFrame');
+const panda = document.getElementById('panda');
+const rope = document.getElementById('rope');
+const banner = document.getElementById('banner');
+const help = document.getElementById('help');
+const music = document.getElementById('music');
+const text = document.getElementById('text');
 
-  // Panda run
-  setTimeout(() => {
-    panda.style.left = '42%';
-  }, 500);
+let pulled = false;
 
-  let pulled = false;
+/* 🐼 PANDA WALK (step effect) */
+let pos = -150;
+let walk = setInterval(() => {
+  pos += 5;
+  panda.style.left = pos + "px";
 
-  rope.addEventListener('click', () => {
-    if (pulled) return;
-    pulled = true;
+  if (pos >= window.innerWidth * 0.42) {
+    clearInterval(walk);
 
-    // Play music
-    frame.src += "&autoplay=1";
+    /* jump */
+    panda.style.bottom = "100px";
+    setTimeout(() => panda.style.bottom = "20px", 300);
 
-    // Panda jump to pull rope
-    panda.style.bottom = '100px';
-    setTimeout(()=>{
-      panda.style.bottom = '20px';
-    },500);
+    setTimeout(() => {
+      help.style.display = "block";
+    }, 800);
+  }
+}, 30);
 
-    // Banner drop
-    setTimeout(()=>{
-      banner.style.top = '80px';
-    },400);
+/* 🎯 ROPE CLICK */
+rope.addEventListener('click', () => {
+  if (pulled) return;
+  pulled = true;
 
-    // Show message
-    setTimeout(()=>{
-      message.style.opacity = 1;
-    },1200);
+  music.play();
 
-    // Confetti
-    for (let i = 0; i < 50; i++) {
-      let c = document.createElement('div');
-      c.className = 'confetti';
-      c.style.left = Math.random() * window.innerWidth + 'px';
-      c.style.background = `hsl(${Math.random()*360},100%,50%)`;
-      c.style.animationDuration = (2 + Math.random()*3) + 's';
-      document.body.appendChild(c);
+  panda.style.bottom = "130px";
+  setTimeout(() => panda.style.bottom = "20px", 300);
+
+  banner.style.top = "80px";
+
+  startTyping();
+
+  createConfetti();
+});
+
+/* ✨ TYPING MESSAGE (emotional) */
+const messageText = `Dear Vamika 💖
+
+Aaj ka din sirf tumhara hai...
+Aur sach bolu to tum sirf ek din nahi, har din special ho ✨
+
+Tumhari smile kisi bhi din ko perfect bana sakti hai 😊
+Aur tumhari presence duniya ko thoda aur beautiful bana deti hai 🌸
+
+I hope tumhari life hamesha happiness, love aur success se bhari rahe 💫
+
+Kabhi udaas mat hona...
+Because you are truly someone very special ❤️
+
+Happy Birthday once again 🎂✨`;
+
+function startTyping() {
+  let i = 0;
+  function type() {
+    if (i < messageText.length) {
+      text.innerHTML += messageText.charAt(i) === "\n" ? "<br>" : messageText.charAt(i);
+      i++;
+      setTimeout(type, 35);
     }
-  });
+  }
+  type();
+}
+
+/* 🎉 CONFETTI */
+function createConfetti() {
+  for (let i = 0; i < 80; i++) {
+    let c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * window.innerWidth + 'px';
+    c.style.background = `hsl(${Math.random()*360},100%,50%)`;
+    c.style.animationDuration = (2 + Math.random()*3) + 's';
+    document.body.appendChild(c);
+  }
+}
 </script>
 
 </body>
